@@ -3,8 +3,8 @@
 ````mermaid
 sequenceDiagram
     participant captain as CAPTAIN API GATEWAY
-    participant lead as LEAD MANAGEMENT SERVICE
     participant supply as SUPPLY REGISTRY SERVICE
+    participant lead as LEAD MANAGEMENT SERVICE
     participant cash as CASH IN SERVICE
     participant e-captain as CAPTAIN-EARNING WORKER
     par ONBOARD LEAD
