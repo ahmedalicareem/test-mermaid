@@ -2,153 +2,158 @@
 
 ````mermaid
 sequenceDiagram
+    participant captain as CAPTAIN API GATEWAY
+    participant lead as LEAD MANAGEMENT SERVICE
+    participant supply as SUPPLY REGISTRY SERVICE
+    participant cash as CASH IN SERVICE
+    participant e-captain as CAPTAIN-EARNING WORKER
     par ONBOARD LEAD
-        activate CAPTAIN API GATEWAY
-        CAPTAIN API GATEWAY->>LEAD MANAGEMENT SERVICE: ONBOARD LEAD CAPTAIN
-        deactivate CAPTAIN API GATEWAY
-        activate LEAD MANAGEMENT SERVICE
-        LEAD MANAGEMENT SERVICE->>LEAD MANAGEMENT SERVICE:CREATE CAPTAIN
-        LEAD MANAGEMENT SERVICE->>SUPPLY REGISTRY SERVICE: PUBLISH CAPTAIN_LEAD_APPROVED_FOR_CREATION_ON_CORE_VIA_SRS_EVENT
-        activate SUPPLY REGISTRY SERVICE
-        deactivate LEAD MANAGEMENT SERVICE
-        SUPPLY REGISTRY SERVICE->>SUPPLY REGISTRY SERVICE: SAVE DRIVER
-        activate CASH IN SERVICE
-        SUPPLY REGISTRY SERVICE->>CASH IN SERVICE: PUBLISH CAPTAIN_UPDATE EVENT
-        activate LEAD MANAGEMENT SERVICE
-        SUPPLY REGISTRY SERVICE->>LEAD MANAGEMENT SERVICE: PUBLISH CAPTAIN_PROFILE_UPDATE EVENT
-        deactivate LEAD MANAGEMENT SERVICE
-        SUPPLY REGISTRY SERVICE->>CASH IN SERVICE: PUBLISH CAPTAIN_INFO_ATTRIBUTES EVENT
-        deactivate CASH IN SERVICE
-        SUPPLY REGISTRY SERVICE->>SUPPLY REGISTRY SERVICE: SEND CAPTAIN CREATION SMS
-        SUPPLY REGISTRY SERVICE->>SUPPLY REGISTRY SERVICE: SAVE CAPTAIN DOCUMENTS
-        activate LEAD MANAGEMENT SERVICE
-        SUPPLY REGISTRY SERVICE->>LEAD MANAGEMENT SERVICE: PUBLISH CAPTAIN_CREATION_RESPONSE EVENT
-        LEAD MANAGEMENT SERVICE->>SUPPLY REGISTRY SERVICE: PUBLISH CAR_LEAD_APPROVED_FOR_CREATION_ON_CORE EVENT
-        SUPPLY REGISTRY SERVICE->>SUPPLY REGISTRY SERVICE: SAVE CAR
-        SUPPLY REGISTRY SERVICE->>LEAD MANAGEMENT SERVICE: PUBLISH CAR_CREATION_RESPONSE EVENT
-        LEAD MANAGEMENT SERVICE->>SUPPLY REGISTRY SERVICE: PUBLISH PUBLISH LIMO_LEAD_APPROVED_FOR_CREATION_ON_CORE EVENT
-        SUPPLY REGISTRY SERVICE->>SUPPLY REGISTRY SERVICE: CREATE AND ASSIGN LIMO COMPANY
-        SUPPLY REGISTRY SERVICE->>LEAD MANAGEMENT SERVICE: PUBLISH LIMO_CREATION_RESPONSE EVENT
-        deactivate LEAD MANAGEMENT SERVICE
-        deactivate SUPPLY REGISTRY SERVICE
+        activate captain
+        activate lead
+        captain->>lead: ONBOARD LEAD CAPTAIN
+        deactivate captain
+        lead->>lead:CREATE CAPTAIN
+        activate supply
+        lead->>supply: PUBLISH CAPTAIN_LEAD_APPROVED_FOR_CREATION_ON_CORE_VIA_SRS_EVENT
+        deactivate lead
+        supply->>supply: SAVE DRIVER
+        activate cash
+        supply->>cash: PUBLISH CAPTAIN_UPDATE EVENT
+        activate lead
+        supply->>lead: PUBLISH CAPTAIN_PROFILE_UPDATE EVENT
+        deactivate lead
+        supply->>cash: PUBLISH CAPTAIN_INFO_ATTRIBUTES EVENT
+        deactivate cash
+        supply->>supply: SEND CAPTAIN CREATION SMS
+        supply->>supply: SAVE CAPTAIN DOCUMENTS
+        activate lead
+        supply->>lead: PUBLISH CAPTAIN_CREATION_RESPONSE EVENT
+        lead->>supply: PUBLISH CAR_LEAD_APPROVED_FOR_CREATION_ON_CORE EVENT
+        supply->>supply: SAVE CAR
+        supply->>lead: PUBLISH CAR_CREATION_RESPONSE EVENT
+        lead->>supply: PUBLISH PUBLISH LIMO_LEAD_APPROVED_FOR_CREATION_ON_CORE EVENT
+        supply->>supply: CREATE AND ASSIGN LIMO COMPANY
+        supply->>lead: PUBLISH LIMO_CREATION_RESPONSE EVENT
+        deactivate lead
+        deactivate supply
     end
     par ADD CAPTAIN
-        activate CAPTAIN API GATEWAY
-        activate SUPPLY REGISTRY SERVICE
-        CAPTAIN API GATEWAY->>SUPPLY REGISTRY SERVICE: ADD CAPTAIN
-        SUPPLY REGISTRY SERVICE->>SUPPLY REGISTRY SERVICE: SAVE CAPTAIN
-        activate CASH IN SERVICE
-        SUPPLY REGISTRY SERVICE->>CASH IN SERVICE: PUBLISH CAPTAIN_UPDATE EVENT
-        activate LEAD MANAGEMENT SERVICE
-        SUPPLY REGISTRY SERVICE->>LEAD MANAGEMENT SERVICE: PUBLISH CAPTAIN_PROFILE_UPDATE EVENT
-        deactivate LEAD MANAGEMENT SERVICE
-        SUPPLY REGISTRY SERVICE->>CASH IN SERVICE: PUBLISH CAPTAIN_INFO_ATTRIBUTES EVENT
-        deactivate CASH IN SERVICE
-        SUPPLY REGISTRY SERVICE->>SUPPLY REGISTRY SERVICE: SAVE DOCUMENTS
-        SUPPLY REGISTRY SERVICE->>SUPPLY REGISTRY SERVICE: SAVE CAR
-        SUPPLY REGISTRY SERVICE->CAPTAIN API GATEWAY: SUCCESS
-        deactivate SUPPLY REGISTRY SERVICE
-        deactivate CAPTAIN API GATEWAY
+        activate captain
+        activate supply
+        captain->>supply: ADD CAPTAIN
+        supply->>supply: SAVE CAPTAIN
+        activate cash
+        supply->>cash: PUBLISH CAPTAIN_UPDATE EVENT
+        activate lead
+        supply->>lead: PUBLISH CAPTAIN_PROFILE_UPDATE EVENT
+        deactivate lead
+        supply->>cash: PUBLISH CAPTAIN_INFO_ATTRIBUTES EVENT
+        deactivate cash
+        supply->>supply: SAVE DOCUMENTS
+        supply->>supply: SAVE CAR
+        supply->captain: SUCCESS
+        deactivate supply
+        deactivate captain
     end
     par ACTIVATE CAPTAIN
-        activate CAPTAIN API GATEWAY
-        activate SUPPLY REGISTRY SERVICE
-        CAPTAIN API GATEWAY->>SUPPLY REGISTRY SERVICE: ACTIVATE CAPTAIN
-        SUPPLY REGISTRY SERVICE->>CAPTAIN API GATEWAY: SUCCESS
-        deactivate SUPPLY REGISTRY SERVICE
-        deactivate CAPTAIN API GATEWAY
+        activate captain
+        activate supply
+        captain->>supply: ACTIVATE CAPTAIN
+        supply->>captain: SUCCESS
+        deactivate supply
+        deactivate captain
     end
     par CAPTAIN DETAILS
-        activate CAPTAIN API GATEWAY
-        activate SUPPLY REGISTRY SERVICE
-        CAPTAIN API GATEWAY->>SUPPLY REGISTRY SERVICE: GET CAPTAIN DETAILS
-        SUPPLY REGISTRY SERVICE->>CAPTAIN API GATEWAY: SUCCESS
-        deactivate SUPPLY REGISTRY SERVICE
-        deactivate CAPTAIN API GATEWAY
+        activate captain
+        activate supply
+        captain->>supply: GET CAPTAIN DETAILS
+        supply->>captain: SUCCESS
+        deactivate supply
+        deactivate captain
     end
     par EDIT CAPTAIN
-        activate CAPTAIN API GATEWAY
-        activate SUPPLY REGISTRY SERVICE
-        CAPTAIN API GATEWAY->>SUPPLY REGISTRY SERVICE: EDIT CAPTAIN
-        activate CASH IN SERVICE
-        SUPPLY REGISTRY SERVICE->>CASH IN SERVICE: PUBLISH CAPTAIN_INFO_ATTRIBUTES
-        deactivate CASH IN SERVICE
-        SUPPLY REGISTRY SERVICE->>SUPPLY REGISTRY SERVICE: UPDATE DRIVER
-        SUPPLY REGISTRY SERVICE->>SUPPLY REGISTRY SERVICE: UPDATE DRIVER DETAILS
-        SUPPLY REGISTRY SERVICE->>SUPPLY REGISTRY SERVICE: UPDATE DRIVER PHONE
-        SUPPLY REGISTRY SERVICE->>SUPPLY REGISTRY SERVICE: VERIFY DOCUMENTS
-        SUPPLY REGISTRY SERVICE->>SUPPLY REGISTRY SERVICE: SAVE DOCUMENTS
-        SUPPLY REGISTRY SERVICE->CAPTAIN API GATEWAY: SUCCESS
-        deactivate CAPTAIN API GATEWAY
-        activate LEAD MANAGEMENT SERVICE
-        SUPPLY REGISTRY SERVICE->>LEAD MANAGEMENT SERVICE: PUBLISH CAPTAIN_UPDATE EVENT
-        SUPPLY REGISTRY SERVICE->>LEAD MANAGEMENT SERVICE: PUBLISH CAPTAIN_PROFILE_UPDATE EVENT
-        deactivate LEAD MANAGEMENT SERVICE
-        deactivate SUPPLY REGISTRY SERVICE
+        activate captain
+        activate supply
+        captain->>supply: EDIT CAPTAIN
+        activate cash
+        supply->>cash: PUBLISH CAPTAIN_INFO_ATTRIBUTES
+        deactivate cash
+        supply->>supply: UPDATE DRIVER
+        supply->>supply: UPDATE DRIVER DETAILS
+        supply->>supply: UPDATE DRIVER PHONE
+        supply->>supply: VERIFY DOCUMENTS
+        supply->>supply: SAVE DOCUMENTS
+        supply->captain: SUCCESS
+        deactivate captain
+        activate lead
+        supply->>lead: PUBLISH CAPTAIN_UPDATE EVENT
+        supply->>lead: PUBLISH CAPTAIN_PROFILE_UPDATE EVENT
+        deactivate lead
+        deactivate supply
     end
     par ADD LIMO COMPANY
-        activate CAPTAIN API GATEWAY
-        activate SUPPLY REGISTRY SERVICE
-        CAPTAIN API GATEWAY->>SUPPLY REGISTRY SERVICE: ADD LIMO COMPANY
-        SUPPLY REGISTRY SERVICE->>SUPPLY REGISTRY SERVICE: SAVE ADDRESS
-        SUPPLY REGISTRY SERVICE->>SUPPLY REGISTRY SERVICE: SAVE LIMO COMPANY
-        SUPPLY REGISTRY SERVICE->>SUPPLY REGISTRY SERVICE: SAVE LIMO COMPANY DETAILS
-        SUPPLY REGISTRY SERVICE->>SUPPLY REGISTRY SERVICE: ASSIGN LIMO COMPANY TO SERVICE PROVIDER
-        SUPPLY REGISTRY SERVICE->CAPTAIN API GATEWAY: SUCCESS
-        deactivate CAPTAIN API GATEWAY
-        activate LEAD MANAGEMENT SERVICE
-        SUPPLY REGISTRY SERVICE->>LEAD MANAGEMENT SERVICE: PUBLISH LIMO_COMPANY_IN_SG EVENT
-        deactivate SUPPLY REGISTRY SERVICE
-        LEAD MANAGEMENT SERVICE->>LEAD MANAGEMENT SERVICE: UPDATE LIMO COMPANY
-        deactivate LEAD MANAGEMENT SERVICE
+        activate captain
+        activate supply
+        captain->>supply: ADD LIMO COMPANY
+        supply->>supply: SAVE ADDRESS
+        supply->>supply: SAVE LIMO COMPANY
+        supply->>supply: SAVE LIMO COMPANY DETAILS
+        supply->>supply: ASSIGN LIMO COMPANY TO SERVICE PROVIDER
+        supply->captain: SUCCESS
+        deactivate captain
+        activate lead
+        supply->>lead: PUBLISH LIMO_COMPANY_IN_SG EVENT
+        deactivate supply
+        lead->>lead: UPDATE LIMO COMPANY
+        deactivate lead
     end
     par EDIT LIMO COMPANY
-        activate CAPTAIN API GATEWAY
-        activate SUPPLY REGISTRY SERVICE
-        CAPTAIN API GATEWAY->>SUPPLY REGISTRY SERVICE: EDIT LIMO COMPANY
-        SUPPLY REGISTRY SERVICE->>SUPPLY REGISTRY SERVICE: UPDATE LIMO COMPANY DETAILS
-        SUPPLY REGISTRY SERVICE->CAPTAIN API GATEWAY: SUCCESS
-        deactivate CAPTAIN API GATEWAY
-        activate LEAD MANAGEMENT SERVICE
-        SUPPLY REGISTRY SERVICE->>LEAD MANAGEMENT SERVICE: PUBLISH SYNC_LIMO_COMPANY_IN_SG EVENT
-        LEAD MANAGEMENT SERVICE->>LEAD MANAGEMENT SERVICE: UPDATE LIMO COMPANY
-        deactivate LEAD MANAGEMENT SERVICE
-        activate CAPTAIN-EARNING WORKER
-        SUPPLY REGISTRY SERVICE->>CAPTAIN-EARNING WORKER: PUBLISH LIMO_COMPANY_EDITED EVENT
-        deactivate CAPTAIN-EARNING WORKER
-        deactivate SUPPLY REGISTRY SERVICE
+        activate captain
+        activate supply
+        captain->>supply: EDIT LIMO COMPANY
+        supply->>supply: UPDATE LIMO COMPANY DETAILS
+        supply->captain: SUCCESS
+        deactivate captain
+        activate lead
+        supply->>lead: PUBLISH SYNC_LIMO_COMPANY_IN_SG EVENT
+        lead->>lead: UPDATE LIMO COMPANY
+        deactivate lead
+        activate e-captain
+        supply->>e-captain: PUBLISH LIMO_COMPANY_EDITED EVENT
+        deactivate e-captain
+        deactivate supply
     end
     par ADD CAR
-        activate CAPTAIN API GATEWAY
-        activate SUPPLY REGISTRY SERVICE
-        CAPTAIN API GATEWAY->>SUPPLY REGISTRY SERVICE: ADD CAR
-        SUPPLY REGISTRY SERVICE->CAPTAIN API GATEWAY: SUCCESS
-        deactivate CAPTAIN API GATEWAY
-        activate LEAD MANAGEMENT SERVICE
-        SUPPLY REGISTRY SERVICE->>LEAD MANAGEMENT SERVICE: PUBLISH UPSERT_CAR EVENT
-        deactivate LEAD MANAGEMENT SERVICE
-        deactivate SUPPLY REGISTRY SERVICE
+        activate captain
+        activate supply
+        captain->>supply: ADD CAR
+        supply->captain: SUCCESS
+        deactivate captain
+        activate lead
+        supply->>lead: PUBLISH UPSERT_CAR EVENT
+        deactivate lead
+        deactivate supply
     end
     par EDIT CAR
-        activate CAPTAIN API GATEWAY
-        activate SUPPLY REGISTRY SERVICE
-        CAPTAIN API GATEWAY->>SUPPLY REGISTRY SERVICE: EDIT CAR
-        SUPPLY REGISTRY SERVICE->SUPPLY REGISTRY SERVICE: ASSIGN DRIVER CAR TYPE
-        SUPPLY REGISTRY SERVICE->SUPPLY REGISTRY SERVICE: ASSIGN DEDICATED DRIVER FOR CAR
-        SUPPLY REGISTRY SERVICE->CAPTAIN API GATEWAY: SUCCESS
-        deactivate CAPTAIN API GATEWAY
-        activate LEAD MANAGEMENT SERVICE
-        SUPPLY REGISTRY SERVICE->>LEAD MANAGEMENT SERVICE: PUBLISH UPSERT_CAR EVENT
-        deactivate LEAD MANAGEMENT SERVICE
-        deactivate SUPPLY REGISTRY SERVICE
+        activate captain
+        activate supply
+        captain->>supply: EDIT CAR
+        supply->supply: ASSIGN DRIVER CAR TYPE
+        supply->supply: ASSIGN DEDICATED DRIVER FOR CAR
+        supply->captain: SUCCESS
+        deactivate captain
+        activate lead
+        supply->>lead: PUBLISH UPSERT_CAR EVENT
+        deactivate lead
+        deactivate supply
     end
     par ADD CAR MAKE
-        activate CAPTAIN API GATEWAY
-        activate SUPPLY REGISTRY SERVICE
-        CAPTAIN API GATEWAY->>SUPPLY REGISTRY SERVICE: ADD CAR MAKE
-        SUPPLY REGISTRY SERVICE->SUPPLY REGISTRY SERVICE: SAVE CAR MAKE
-        SUPPLY REGISTRY SERVICE->>CAPTAIN API GATEWAY: SUCCESS
-        deactivate SUPPLY REGISTRY SERVICE
-        deactivate CAPTAIN API GATEWAY
+        activate captain
+        activate supply
+        captain->>supply: ADD CAR MAKE
+        supply->supply: SAVE CAR MAKE
+        supply->>captain: SUCCESS
+        deactivate supply
+        deactivate captain
     end
 ````
