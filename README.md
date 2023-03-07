@@ -51,7 +51,7 @@ sequenceDiagram
         deactivate cash
         supply->>supply: SAVE DOCUMENTS
         supply->>supply: SAVE CAR
-        supply->captain: SUCCESS
+        supply->>captain: SUCCESS
         deactivate supply
         deactivate captain
     end
@@ -99,7 +99,7 @@ sequenceDiagram
         supply->>supply: SAVE LIMO COMPANY
         supply->>supply: SAVE LIMO COMPANY DETAILS
         supply->>supply: ASSIGN LIMO COMPANY TO SERVICE PROVIDER
-        supply->captain: SUCCESS
+        supply->>captain: SUCCESS
         deactivate captain
         activate lead
         supply->>lead: PUBLISH LIMO_COMPANY_IN_SG EVENT
@@ -112,7 +112,7 @@ sequenceDiagram
         activate supply
         captain->>supply: EDIT LIMO COMPANY
         supply->>supply: UPDATE LIMO COMPANY DETAILS
-        supply->captain: SUCCESS
+        supply->>captain: SUCCESS
         deactivate captain
         activate lead
         supply->>lead: PUBLISH SYNC_LIMO_COMPANY_IN_SG EVENT
@@ -127,7 +127,7 @@ sequenceDiagram
         activate captain
         activate supply
         captain->>supply: ADD CAR
-        supply->captain: SUCCESS
+        supply->>captain: SUCCESS
         deactivate captain
         activate lead
         supply->>lead: PUBLISH UPSERT_CAR EVENT
@@ -138,9 +138,9 @@ sequenceDiagram
         activate captain
         activate supply
         captain->>supply: EDIT CAR
-        supply->supply: ASSIGN DRIVER CAR TYPE
-        supply->supply: ASSIGN DEDICATED DRIVER FOR CAR
-        supply->captain: SUCCESS
+        supply->>supply: ASSIGN DRIVER CAR TYPE
+        supply->>supply: ASSIGN DEDICATED DRIVER FOR CAR
+        supply->>captain: SUCCESS
         deactivate captain
         activate lead
         supply->>lead: PUBLISH UPSERT_CAR EVENT
@@ -151,9 +151,68 @@ sequenceDiagram
         activate captain
         activate supply
         captain->>supply: ADD CAR MAKE
-        supply->supply: SAVE CAR MAKE
+        supply->>supply: SAVE CAR MAKE
         supply->>captain: SUCCESS
         deactivate supply
         deactivate captain
     end
+````
+
+````mermaid
+graph TD
+    classDef bordercolorless fill:white,stroke-width:0px;
+    classDef whiteColor fill:#0000
+    gateway[Captain Api Gateway]
+    supplyR[Supply Registry]
+    main[(MainDB)]
+    dynamo[(DynamoDB)]
+    supplyDB[(supply-registry-db)]
+    subgraph Services
+        a1[captain service]
+        a2[facial recognition service]
+        a3[identity service]
+        a4[.]
+        a5[lead management service]
+        a6[taxi meter service]
+        a7[otp service]
+        a8[supply gate service]
+        a4:::bordercolorless
+    end
+    subgraph Supply_Functions
+        b1[captain service]
+        b2[facial recognition service]
+        b3[identity service]
+        b4[lead management service]
+        b5[taxi meter service]
+        b6[otp service]
+        b7[supply gate service]
+        b8[.]
+        b9[captain service]
+        b10[facial recognition service]
+        b11[identity service]
+        b12[lead management service]
+        b13[taxi meter service]
+        b14[otp service]
+        b15[supply gate service]
+        b8:::bordercolorless
+    end
+    subgraph Supply_Events
+        c1[captain service]
+        c2[facial recognition service]
+        c3[.]
+        c4[identity service]
+        c5[lead management service]
+        c5[taxi meter service]
+        c3:::bordercolorless
+    end
+    Services:::whiteColor
+    Supply_Functions:::whiteColor
+    Supply_Events:::whiteColor
+    supplyR<-->gateway
+    supplyR<-->main
+    supplyR<-->dynamo
+    supplyR<-->supplyDB
+    supplyR<-->a4
+    c3-->supplyR
+    supplyR-->b8
 ````
